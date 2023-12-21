@@ -1,9 +1,19 @@
 "use client"
-import React from 'react'
+import React, { useState } from 'react'
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import Link from 'next/link';
+import { useAppContext } from '../utils/GlobalContext';
+
 
 const LoginForm = () => {
+
+    const [loading, setloading] = useState(false)
+
+
+    const { login } = useAppContext()
+
+
     const formik = useFormik({
         initialValues: {
             email: '',
@@ -17,9 +27,18 @@ const LoginForm = () => {
                 .required('Required'),
         }),
         onSubmit: values => {
-            alert(JSON.stringify(values, null, 2));
+            handleLogin(values)
         },
     });
+
+
+    const handleLogin = async (values) => {
+        setloading(true)
+        await login(values)
+
+        setloading(false)
+    }
+
     return (
         <div>
             <h1 className='capitalize font-medium'>Sign in to getdesigns</h1>
@@ -67,12 +86,12 @@ const LoginForm = () => {
                     <button
                         className="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500"
                     >
-                        Login
+                        {loading ? "loging in" : "Login"}
                     </button>
 
                     <p className="mt-4 text-sm text-gray-500 sm:mt-0">
                         {"Don't"} have an account?
-                        <a href="/signup" className="text-gray-700 underline">Sign up</a>.
+                        <Link href="/signup" className="text-gray-700 underline">Sign up</Link>.
                     </p>
                 </div>
             </form>
