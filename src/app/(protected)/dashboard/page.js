@@ -1,10 +1,12 @@
 "use client"
 import React, { useState } from 'react'
 import DesignComponent from '@/app/_components/DesignComponent'
+import { useRouter } from 'next/navigation'
 
 
 const Dashboard = () => {
     const [active, setactive] = useState("New Designs")
+    const router = useRouter()
     return (
         <div className='flex w-full flex-col px-8 min-h-screen bg-[#1B2430]'>
             <div className='flex w-full justify-between px-4 sm:px-6 lg:px-8 mt-10'>
@@ -13,7 +15,7 @@ const Dashboard = () => {
                     <span onClick={() => setactive("Your Designs")} className={(active === "Your Designs" ? "border-b border-primary pb-3 text-white cursor-pointer" : "pb-3 text-white cursor-pointer")}>Your Designs</span>
                 </div>
                 <div>
-                    <button className='bg-primary px-6 py-3 text-white font-semibold rounded-md'>Create design</button>
+                    <button className='bg-primary px-6 py-3 text-white font-semibold rounded-md' onClick={() => router.push("/add-new-design")}>Create design</button>
                 </div>
             </div>
             <div className='my-20'>

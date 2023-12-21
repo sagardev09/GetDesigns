@@ -1,6 +1,6 @@
 "use client"
 import { useContext, createContext, useState, useEffect } from "react";
-import { client, account, databases } from "./appwriteConfig";
+import { client, account, databases, storage } from "./appwriteConfig";
 import { ID } from "appwrite";
 import { useRouter } from 'next/navigation';
 
@@ -72,6 +72,38 @@ function GlobalProvider({ children }) {
         }
     }
 
+    const storeprofilepic = async (file) => {
+        try {
+            const response = await storage.createFile(process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID, ID.unique(), file)
+            console.log(response);
+            return response.$id
+        } catch (error) {
+            alert(error)
+        }
+    }
+
+    const updateUser = async (name, email, bio, profileimage, id) => {
+        try {
+            const response = await databases.updateDocument(process.env.NEXT_PUBLIC_DATABASE_ID, process.env.NEXT_PUBLIC_USER_COLLECTION_ID, id, {
+                name: name,
+                email: email,
+                bio: bio,
+                profileimage: profileimage,
+            })
+        } catch (error) {
+            alert(error)
+        }
+    }
+
+    const profilePreview = async (id) => {
+        try {
+            const result = await storage.getFilePreview(process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID, id);
+            return result.href
+        } catch (error) {
+            alert("error")
+        }
+    }
+
     const contextdata = {
         user,
         login,
@@ -79,7 +111,10 @@ function GlobalProvider({ children }) {
         signup,
         createuserprofile,
         getuserinfo,
-        getuserdetails
+        getuserdetails,
+        storeprofilepic,
+        updateUser,
+        profilePreview
     }
 
 
