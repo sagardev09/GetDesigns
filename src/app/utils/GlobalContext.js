@@ -11,7 +11,11 @@ function GlobalProvider({ children }) {
     const router = useRouter()
 
     const [user, setuser] = useState(null)
+    const [presentuserid, setpresentuserid] = useState("")
 
+
+
+    // user login in function
 
     const login = async (userinfo) => {
         try {
@@ -23,6 +27,8 @@ function GlobalProvider({ children }) {
             alert("error")
         }
     }
+
+    //user registration function
 
     const signup = async (userinfo) => {
         try {
@@ -37,9 +43,13 @@ function GlobalProvider({ children }) {
         }
     }
 
+    //logout function
+
     const logout = async () => {
         await account.deleteSession("current")
     }
+
+    //create user data in database
 
     const createuserprofile = async (id, userinfo, bio = "", profileimage = "") => {
         try {
@@ -55,6 +65,8 @@ function GlobalProvider({ children }) {
         }
     }
 
+    // function to get the deatils of logged in user
+
     const getuserinfo = async () => {
         try {
             const res = await account.get()
@@ -63,14 +75,20 @@ function GlobalProvider({ children }) {
             console.log(error);
         }
     }
+
+    //get the user detail by id
+
     const getuserdetails = async (id) => {
         try {
             const user = await databases.getDocument(process.env.NEXT_PUBLIC_DATABASE_ID, process.env.NEXT_PUBLIC_USER_COLLECTION_ID, id)
+            setpresentuserid(user.$id)
             return user
         } catch (error) {
             console.log(error);
         }
     }
+
+    // function to store profile image
 
     const storeprofilepic = async (file) => {
         try {
@@ -81,6 +99,8 @@ function GlobalProvider({ children }) {
             alert(error)
         }
     }
+
+    //function to update user information
 
     const updateUser = async (name, email, bio, profileimage, id) => {
         try {
@@ -95,12 +115,31 @@ function GlobalProvider({ children }) {
         }
     }
 
+    // function to view profile image
+
     const profilePreview = async (id) => {
         try {
             const result = await storage.getFilePreview(process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID, id);
             return result.href
         } catch (error) {
             alert("error")
+        }
+    }
+
+    //function to store designs in design collection
+
+    const createdesign = async (userinfo) => {
+        try {
+            const response = await databases.createDocument(process.env.NEXT_PUBLIC_DATABASE_ID, process.env.NEXT_PUBLIC_APPWRITE_DESIGN_COLLECTION_ID, ID.unique(), {
+                title: userinfo.title,
+                desc: userinfo.desc,
+                category: userinfo.category,
+                image: userinfo.imageId,
+                userid: userinfo.userId
+
+            })
+        } catch (error) {
+            alert(error);
         }
     }
 
@@ -114,7 +153,8 @@ function GlobalProvider({ children }) {
         getuserdetails,
         storeprofilepic,
         updateUser,
-        profilePreview
+        profilePreview,
+        createdesign
     }
 
 
