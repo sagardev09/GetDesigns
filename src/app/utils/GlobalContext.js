@@ -1,7 +1,7 @@
 "use client"
 import { useContext, createContext, useState, useEffect } from "react";
 import { client, account, databases, storage } from "./appwriteConfig";
-import { ID } from "appwrite";
+import { ID, Query } from "appwrite";
 import { useRouter } from 'next/navigation';
 
 export const AppContext = createContext(null)
@@ -115,6 +115,20 @@ function GlobalProvider({ children }) {
         }
     }
 
+    const fecthUsers = async (userIds = []) => {
+        try {
+            if (userIds) {
+                const response = await databases.listDocuments(process.env.NEXT_PUBLIC_DATABASE_ID, process.env.NEXT_PUBLIC_USER_COLLECTION_ID, [Query.equal("$id", userIds)],)
+                return response
+            } else {
+                const response = await databases.listDocuments(process.env.NEXT_PUBLIC_DATABASE_ID, process.env.NEXT_PUBLIC_USER_COLLECTION_ID)
+                return response
+            }
+        } catch (error) {
+            alert(error)
+        }
+    }
+
     // function to view profile image
 
     const profilePreview = async (id) => {
@@ -143,6 +157,42 @@ function GlobalProvider({ children }) {
         }
     }
 
+    //get all users desgins
+
+    const fetchDesigns = async (userId = "", designId = "") => {
+        try {
+            if (userId) {
+                const res = await databases.listDocuments(
+                    process.env.NEXT_PUBLIC_DATABASE_ID,
+                    process.env.NEXT_PUBLIC_APPWRITE_DESIGN_COLLECTION_ID,
+                    [Query.equal("userid", [userId])]
+                )
+                console.log(res.documents);
+                return res
+            } else {
+                if (designId) {
+                    const res = await databases.listDocuments(
+                        process.env.NEXT_PUBLIC_DATABASE_ID,
+                        process.env.NEXT_PUBLIC_APPWRITE_DESIGN_COLLECTION_ID,
+                        [Query.equal("$id", [designId])]
+                    )
+                    console.log(res.documents);
+                    return res
+                } else {
+                    const res = await databases.listDocuments(
+                        process.env.NEXT_PUBLIC_DATABASE_ID,
+                        process.env.NEXT_PUBLIC_APPWRITE_DESIGN_COLLECTION_ID,
+                    )
+                    console.log(res.documents);
+                    return res
+                }
+            }
+
+        } catch (error) {
+            alert(error)
+        }
+    }
+
     const contextdata = {
         user,
         login,
@@ -154,7 +204,9 @@ function GlobalProvider({ children }) {
         storeprofilepic,
         updateUser,
         profilePreview,
-        createdesign
+        createdesign,
+        fecthUsers,
+        fetchDesigns
     }
 
 
