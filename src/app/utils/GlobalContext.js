@@ -72,7 +72,9 @@ function GlobalProvider({ children }) {
             const res = await account.get()
             return res
         } catch (error) {
+            router.push("/")
             console.log(error);
+            return null
         }
     }
 

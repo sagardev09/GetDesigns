@@ -10,8 +10,6 @@ const DesignComponent = ({ finalRecords, userRecords }) => {
 
     const router = useRouter()
 
-
-
     return (
         <div className='flex flex-col items-center justify-center grow'>
             {finalRecords.length === 0 ?
@@ -24,10 +22,10 @@ const DesignComponent = ({ finalRecords, userRecords }) => {
                             >
                                 <DashBoardImages imageid={item["image"]} height={350} />
                                 <div className='flex justify-between items-center'>
-                                    <div className='flex items-center gap-3'>
+                                    {userRecords && <div className='flex items-center gap-3'>
                                         <DashboardProfileimage imageid={userRecords[item?.userid]?.["profileimage"]} />
                                         {userRecords[item?.userid] && <span>{userRecords[item?.userid]?.["name"]}</span>}
-                                    </div>
+                                    </div>}
                                     <div className='flex items-center gap-3'>
                                         <Heart className='text-red-500 w-4' />
                                         <span>0</span>

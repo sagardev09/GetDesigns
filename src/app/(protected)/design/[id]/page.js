@@ -9,21 +9,33 @@ import DashboardProfileimage from '../../_components/DashboardProfileimage'
 const DesignInfo = ({ params }) => {
 
     const [loading, setloading] = useState(false)
-    const { fetchDesigns } = useAppContext()
+    const { fetchDesigns, fecthUsers } = useAppContext()
     const [Design, setDesign] = useState([])
+    const [user, setuser] = useState({})
 
     useEffect(() => {
         if (params) {
             const designId = params.id
-            console.log(designId);
+
             fetchDesignDetails(designId)
         }
     }, [params])
 
     const fetchDesignDetails = async (designId) => {
         setloading(true)
+
         const design = await fetchDesigns("", designId)
-        console.log("design", design);
+
+        let alldesigns = design.documents
+
+        if (alldesigns.length > 0) {
+            let design1 = alldesigns[0]
+            let userid = design1["userid"]
+            let response = await fecthUsers(userid)
+            console.log("response", response.documents);
+            setuser(response.documents)
+        }
+
         setDesign(design.documents)
         setloading(false)
     }
@@ -37,18 +49,27 @@ const DesignInfo = ({ params }) => {
                             <div className='w-full'>
                                 <DashBoardImages imageid={Design[0]["image"]} height={700} />
                             </div>
-                            <div className='flex items-center justify-end gap-4'>
-                                <Heart className='text-red-500' />
-                                <span className='text-red-500'> 0</span>
+                            <div className='flex items-center justify-between'>
+                                <div className='flex items-center gap-3 text-white'>
+                                    <div>
+                                        <DashboardProfileimage imageid={user?.[0]?.["profileimage"]} />
+                                    </div>
+                                    <div>
+                                        <h5>{user?.[0]?.["name"]}</h5>
+                                        <h5>{user?.[0]?.["bio"]}</h5>
+                                    </div>
+                                </div>
+                                <div className='flex items-center gap-3'>
+                                    <Heart className='text-red-500' />
+                                    <span className='text-red-500'> 0</span>
+                                </div>
+
                             </div>
                             <div>
                                 <h5 className='text-white font-semibold text-2xl'>{Design[0]["title"]}</h5>
                             </div>
                             <div className='flex items-center gap-3'>
-                                <div>
-                                    {/* <DashboardProfileimage imageid={}/> */}
-                                </div>
-                                <div></div>
+                                <h5 className='text-white'>{Design[0]["desc"]}</h5>
                             </div>
                         </div>
                     )

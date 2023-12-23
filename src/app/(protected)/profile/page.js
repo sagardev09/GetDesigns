@@ -6,17 +6,19 @@ import Image from 'next/image'
 import { useAppContext } from '@/app/utils/GlobalContext'
 import Spinner from '@/app/_components/Spinner'
 import ProfileDialog from '@/app/_components/ProfileDialog'
+import DesignComponent from '@/app/_components/DesignComponent'
 
 
 
 const Profile = () => {
     const router = useRouter()
-    const { getuserinfo, getuserdetails, profilePreview } = useAppContext()
+    const { getuserinfo, getuserdetails, profilePreview, fetchDesigns } = useAppContext()
     const [loggedinuser, setloggedinuser] = useState()
     const [loading, setloading] = useState(false)
     const [profilemodalstate, setprofilemodalstate] = useState(false)
     const [file, setfile] = useState("")
     const [userId, setuserId] = useState()
+    const [userdesigns, setuserdesigns] = useState([])
 
     useEffect(() => {
         currentuser()
@@ -26,13 +28,18 @@ const Profile = () => {
         setloading(true);
         try {
             let user = await getuserinfo();
-            const userid = user.$id;
+            const userid = user?.$id;
             setuserId(userid);
-            let userdetails = await getuserdetails(userid);
-            setloggedinuser({ ...userdetails });
-            if (userdetails?.profileimage) {
-                await handleprofileimage(userdetails?.profileimage);
+            if (userid) {
+                let userdetails = await getuserdetails(userid);
+                fetchdesigns(userid)
+
+                setloggedinuser({ ...userdetails });
+                if (userdetails?.profileimage) {
+                    await handleprofileimage(userdetails?.profileimage);
+                }
             }
+
 
             setloading(false);
         } catch (error) {
@@ -40,6 +47,11 @@ const Profile = () => {
             setloading(false);
         }
     };
+
+    const fetchdesigns = async (id) => {
+        let records = await await fetchDesigns(id, "")
+        setuserdesigns(records.documents)
+    }
 
     const handleprofileimage = async (id) => {
         try {
@@ -87,9 +99,9 @@ const Profile = () => {
                     <h2>
                         work
                     </h2>
-
-                    <div className='flex justify-center mt-20'>
-                        <h1>no designs yet</h1>
+                    <div className='flex justify-center mt-10'>
+                        {userdesigns.length === 0 ? <h1>no designs yet</h1> :
+                            <DesignComponent finalRecords={userdesigns} userRecords={null} />}
                     </div>
                 </div>
 

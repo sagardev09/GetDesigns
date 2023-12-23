@@ -1,12 +1,20 @@
 "use client"
-import UserDialog from '@/app/_components/UserDialog'
 import { useAppContext } from '@/app/utils/GlobalContext'
 import { ChevronDown } from 'lucide-react'
 import Link from 'next/link'
 import React, { useState, useEffect } from 'react'
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { useRouter } from 'next/navigation'
 
 const ProtectedNav = () => {
-    const { profilePreview, getuserinfo, getuserdetails, } = useAppContext()
+    const { profilePreview, getuserinfo, getuserdetails, logout } = useAppContext()
     const [file, setfile] = useState("")
     const [UserDeatils, setUserDeatils] = useState()
     const [active, setactive] = useState(false)
@@ -15,12 +23,13 @@ const ProtectedNav = () => {
         currentuser()
         console.log(active);
     }, [active])
+    const router = useRouter()
 
     const currentuser = async () => {
 
         try {
             let user = await getuserinfo();
-            const userid = user.$id;
+            const userid = user?.$id;
             let userdetails = await getuserdetails(userid);
             setUserDeatils({ ...userdetails });
             if (userdetails?.profileimage) {
@@ -42,6 +51,11 @@ const ProtectedNav = () => {
         }
     };
 
+    const handlelogout = async () => {
+        await logout()
+        router.push("/")
+    }
+
     return (
         <header className="bg-[#1B2430] w-full px-8 py-6 relative">
             <div className="mx-auto flex h-16 max-w-screen items-center justify-between gap-8 px-4 sm:px-6 lg:px-8">
@@ -61,12 +75,21 @@ const ProtectedNav = () => {
                         </div>
                     </Link>
                     <div className='cursor-pointer ml-4' >
-                        <ChevronDown onClick={() => setactive(!active)} />
+                        <DropdownMenu>
+                            <DropdownMenuTrigger>
+                                <ChevronDown className='text-white' />
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                <Link href={"/profile"}>
+                                    <DropdownMenuItem>My Profile</DropdownMenuItem>
+                                </Link>
+                                <DropdownMenuItem onClick={() => handlelogout()}>Logout</DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                     </div>
                 </div>
-            </div>
-            <div className='absolute right-10 top-[100px]'>
-                <UserDialog setactive={setactive} active={active} />
             </div>
 
         </header>
