@@ -23,7 +23,7 @@ const Header = () => {
                                 </Link>
 
                                 <Link
-                                    className="hidden rounded-md bg-transparent border border-[#FF4C29] px-5 py-2.5 text-sm font-medium text-primary transition sm:block"
+                                    className="hidden rounded-md bg-transparent border border-[#FF4C29] px-5 py-2.5 text-sm font-medium text-[#FF4C29] transition sm:block"
                                     href="/signup"
                                 >
                                     Register

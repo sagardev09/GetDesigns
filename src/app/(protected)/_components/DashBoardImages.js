@@ -20,7 +20,7 @@ const DashBoardImages = ({ imageid, height }) => {
     }
     return (
         <div>
-            <img className='w-full object-contain' src={file} alt="" style={{ height: height }} />
+            <img className='w-full h-auto' src={file} alt="" />
         </div>
     )
 }

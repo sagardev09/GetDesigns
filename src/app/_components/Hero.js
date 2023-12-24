@@ -21,14 +21,14 @@ const Hero = () => {
 
                         <div className="mt-8 flex flex-wrap justify-center gap-4">
                             <Link
-                                className="block w-full rounded border border-primary bg-primary px-12 py-3 text-sm font-medium text-white  focus:ring active:text-opacity-75 sm:w-auto"
+                                className="block w-full rounded border border-[#FF4C29] bg-[#FF4C29] px-12 py-3 text-sm font-medium text-white  focus:ring active:text-opacity-75 sm:w-auto"
                                 href="/signup"
                             >
                                 Get Started
                             </Link>
 
                             <a
-                                className="block w-full rounded border border-primary px-12 py-3 text-sm font-medium text-primary  focus:outline-none focus:ring sm:w-auto"
+                                className="block w-full rounded border border-[#FF4C29] px-12 py-3 text-sm font-medium text-[#FF4C29]  focus:outline-none focus:ring sm:w-auto"
                                 href="/"
                             >
                                 Learn More

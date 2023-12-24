@@ -45,9 +45,9 @@ const DesignInfo = ({ params }) => {
             {
                 loading ? <Spinner /> : (
                     Design.length === 0 ? (<p>Upload Designs Please</p>) : (
-                        <div className='w-full flex flex-col space-y-3  max-w-4xl'>
+                        <div className='w-full flex flex-col space-y-3  max-w-6xl pb-10'>
                             <div className='w-full'>
-                                <DashBoardImages imageid={Design[0]["image"]} height={700} />
+                                <DashBoardImages imageid={Design[0]["image"]} />
                             </div>
                             <div className='flex items-center justify-between'>
                                 <div className='flex items-center gap-3 text-white'>
